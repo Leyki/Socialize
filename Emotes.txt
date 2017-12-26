@@ -1,0 +1,69 @@
+1 - 10      Npc animations
+
+****************************
+* Animations IDs (Both server and clientsided)           
+****************************
+
+11	Alchemy crafting
+12	Weapon crafting
+13	Armor crafting
+14	Fund # Unrealeased/unused, works!
+15	Unarmed wait # Doesn't work
+16	Hi, hello, wave
+17	Bow
+18	Sad, cry, sob
+19	Happy, laugh, lol
+20	Win, victory
+21	Dance
+22	Taunt, bringit, comeon
+23	Clap, applaud
+24	Beg, sorry
+25	Think, ponder, hmm
+26	Love
+27	Charge, attack
+28	Point, there
+29	Shy
+30	Angry, anger, mad
+31	Idle 1 # Mount iddle 1 when mounting
+32	Idle 2 # Mount iddle 2 when mounting
+33	Idle 3 # Mount iddle 3 when mounting
+34	Talk to npc 1 # Mount talking to npc 1 when mounting
+35	Talk to npc 2 # Mount talking to npc 2 when mounting
+36	Talk to npc 3 # Mount talking to npc 3 when mounting
+37	Combining items
+38	Sit down
+39	Stand up
+40	Mounted idle 1, 2, 3 #                  These are referenced when mounted if triggering an iddle, talk, etc.
+41	Mount idle interjection? #              You can use them unmounted which is sorta neat i guess.
+42	Mounted talk 1, 2, 3 #                  Basically normal iddle childs.
+
+****************************
+* Animations IDs (Only clientsided when emulated)           
+****************************
+
+43	Servant's bow - Elin
+44	Kitchen dance - Elin	
+45	Settle - Human
+46	Peace  - Human
+47	Settle - High Elf
+48	Peace  - High Elf
+49	Settle - Castanic
+50	Peace  - Castanic
+51	Settle - Elin
+52	Peace  - Elin
+53         - GFToday - Human
+54         - GFTime - Human
+55         - GFToday - High Elf
+56         - GFTime - High Elf
+57         - GFToday - Castanic
+58         - GFTime - Castanic
+59         - GFToday - Elin 
+60         - GFTime - Elin
+61         - GFToday - Aman
+62         - GFTime - Aman
+
+73         - Servant's Bow(2017) - Aman
+74         - Servant's Bow(2017) - Castanic
+75         - Servant's Bow(2017) - High Elf
+76         - Servant's Bow(2017) - Human
+77         - Servant's Bow(2017) - Elin
