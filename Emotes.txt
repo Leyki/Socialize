@@ -1,4 +1,4 @@
-1 - 10      Npc animations
+1 - 10      Npc animations # Credits to Teralove for the base list and :b:inkie for parsing the real list from the dc
 
 ****************************
 * Animations IDs (Both server and clientsided)           
@@ -41,29 +41,29 @@
 * Animations IDs (Only clientsided when emulated)           
 ****************************
 
-43	Servant's bow - Elin
-44	Kitchen dance - Elin	
-45	Settle - Human
-46	Peace  - Human
-47	Settle - High Elf
-48	Peace  - High Elf
-49	Settle - Castanic
-50	Peace  - Castanic
-51	Settle - Elin
-52	Peace  - Elin
-53         - GFToday - Human
-54         - GFTime - Human
-55         - GFToday - High Elf
-56         - GFTime - High Elf
-57         - GFToday - Castanic
-58         - GFTime - Castanic
-59         - GFToday - Elin 
-60         - GFTime - Elin
-61         - GFToday - Aman
-62         - GFTime - Aman
+43	Servant's bow  Elin
+44	Kitchen dance  Elin	
+45	Settle   Human
+46	Peace    Human
+47	Settle   High Elf
+48	Peace    High Elf
+49	Settle   Castanic
+50	Peace    Castanic
+51	Settle   Elin
+52	Peace    Elin
+53  GFToday  Human
+54  GFTime   Human
+55  GFToday  High Elf
+56  GFTime   High Elf
+57  GFToday  Castanic
+58  GFTime   Castanic
+59  GFToday  Elin 
+60  GFTime   Elin
+61  GFToday  Aman
+62  GFTime   Aman
 
-73         - Servant's Bow(2017) - Aman
-74         - Servant's Bow(2017) - Castanic
-75         - Servant's Bow(2017) - High Elf
-76         - Servant's Bow(2017) - Human
-77         - Servant's Bow(2017) - Elin
+73  Servant's Bow(2017) - Aman
+74  Servant's Bow(2017) - Castanic
+75  Servant's Bow(2017) - High Elf
+76  Servant's Bow(2017) - Human
+77  Servant's Bow(2017) - Elin

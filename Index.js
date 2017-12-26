@@ -17,7 +17,8 @@ module.exports = function Socialize(dispatch) {
         itemEmote = null,
         canEmote = true, // Avoids a small client bug and meaningless spam to the server
         emoteToUse = null,
-        emoMessage
+        emoMessage,
+        chlu = 0
     //spamming = false
 
     // Default config, edits go in config.json!
@@ -108,6 +109,10 @@ module.exports = function Socialize(dispatch) {
         }
         //if (mountProtection && mounted) can([31, 32, 33, 34, 35, 36])
     })
+    
+    dispatch.hook('C_CHAT', 1, { filter: { silenced: true } }, event => {
+        chlu = event.channel
+    })
 
     // do functional things code
     function cAnime() {
@@ -135,7 +140,7 @@ module.exports = function Socialize(dispatch) {
 
     function toServerMessage() {
         dispatch.toServer('C_CHAT', 1, {
-            channel: 0,
+            channel: chlu,
             message: emoMessage
 
         })
@@ -175,7 +180,7 @@ module.exports = function Socialize(dispatch) {
     command.add('emomsg', (emote, delay, message) => { // to do, add ch, regEX?!?!??!?!"3!2'3" or edit commands...or actually learn to use it :thonk:.... or eval.. or don't do anything and let ' ' handle it
         emoMessaging = true
         setTimeout(() => { emoMessaging = false }, 1400)
-        emoMessage = message.toString()
+        emoMessage = message
         config.messageDelay = delay
         emoteToUse = emote
         cAnime()
@@ -205,13 +210,3 @@ module.exports = function Socialize(dispatch) {
     })
 } // Thx to Saltymemes and Caali for letting me read their code and even steal some bits (?), also :b:inkie
 // /! craftw, fund, etc.
-/*
-S_LOGIN 9
-C_PLAYER_LOCATION 2
-S_SOCIAL 1
-C_SOCIAL 1
-C_CHAT 1
-S_AVAILABLE_SOCIAL_LIST 1
-S_MOUNT_VEHICLE 1
-S_UNMOUNT_VEHICLE 1
-*/
