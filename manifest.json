@@ -1,9 +1,8 @@
 {
   "files": {
     "Emotes.txt": "8e9dfd1495e15892d854dec33ad238229b600b677f9e9c342e752f9d5318efaa",
-    "Index.js": "ab58352797e217b0c3ca076a4dcb33cd5a1dd0ced9041ec067b8d74e93f461a0",
-    "module.json": "59a007d23a1f33de3a94bbffe8ed906905be840513c4565084e9a2a9bfa784d2",
-    "README.md": "9845a4fb54bdf83d8b4c617b429cc718259b26dcbdedb23423285aabe6bb543b"
+    "Index.js": "ba4a22122f4aa3ca6445a2b2f802090394628d00a888dcabfff0f9546da23404",
+    "README.md": "c41e17ba28309f66aad672b17c525ef225137207946cf723b776497438d2c2b0"
   },
   "defs": {
     "S_LOGIN": 9,
@@ -11,6 +10,7 @@
     "S_SOCIAL": 1,
     "C_SOCIAL": 1,
     "C_CHAT": 1,
+    "C_WHISPER": 1,
     "S_MOUNT_VEHICLE": 1,
     "S_UNMOUNT_VEHICLE": 1
   }

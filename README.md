@@ -1,9 +1,16 @@
+#### Autoupdater
 
-##### Commands
+The module is compatible with Caali's proxy so enjoy autoupdates as well as it being built to send notices on updates and the ability to check last commit version in game.
 
-* ***`emo`*** *`emote id`* will dispatch *any* normally usable emote to the server, ids can be found on `Emotes.txt`
+Each time you get a new update the last commit will be displayed in the console when loading the module, if you miss it though or just casually want to check in game, you can access the command *`emocommit`*.
+
+#### Commands
+
+* ***`emo`*** *`emote id`* will dispatch ***any*** normally usable emote to the server, ids can be found on `Emotes.txt`
 ######
-* ***`emosmg`*** *`emote id` + `delay` + `"message"`* will do the same as *`emo`* but also send a **message** with a **delay** of your choice, delay must be **0** if unwanted and message should be expressed as showed, such as ***"example 1"*** or ***\`example 2\`*** due to shitty coding. The message will be sent through the channel in which the command was accesed so use it accordingly. Whispers no work yet, btw.
+* ***`emosmg`*** *`emote id` + `"message"` + `delay(optional)`* will do the same as *`emo`* but also send a **message** with a **delay** of your choice, message should be expressed as showed, such as ***"example 1"*** or ***\`example 2\`*** due to shitty coding. The message will be sent through the channel in which the command was accesed so use it accordingly.
+
+***Note:*** *`delay` will default to the last used value if empty.*
 ######
 
 * ***`emoconfig`*** *`[Arguments]`*
