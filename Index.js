@@ -23,11 +23,11 @@ module.exports = function Socialize(dispatch) {
         emoMessage,
         //spamming = false
 
-        commit = 'Added whispers support to !emosmg and changed the way command works, added commits display when updating or ingame if accesed, please check Readme.md!' + ' #1',
+        commit = 'Fixed dumb mistake in the config commands handler thingy, added clientsided mode and slightly changed the command emo, please check the readme!' + ' #2',
         // Default config, edits go in config.json!
         config = {
-            version: 1,                // Mismatches will overwrite the file for simplicity.
-            //clientsidedMode = false // This should in theory turn
+            version: 1.1,                // Mismatches will overwrite the file for simplicity.
+            clientSidedMode: false, // enables and disables clientsided mode
             //blindMode = { console: false, cmdMessages: false }, // Disables any ingame command message and/or console logs.
             emoteEmulation: false, // Simulates emotes, be ware that your client won't be synched with others.
             emulatePing: 0,     // If for whatever reason you want this, 0 will disable it. It's a bit interesting how ping affects sit/stand up, idk how it looks server side
@@ -41,21 +41,22 @@ module.exports = function Socialize(dispatch) {
             //stopTheEmotion = { me: null, others: null, npcs: null }, //
         } // Anything commented is just ideas, doesn't mean i'd do them :>... or have the brain to do them > .<
 
-
-    if (!fs.existsSync(CONFIG_PATH)) { // We want to know if the config file doesn't exist
-        createConfigurationFile() // be that the case we created them
-        loadConfigurationFile() // and load it
+    // manage config files
+    if (!fs.existsSync(CONFIG_PATH)) {
+        createConfigurationFile()
+        loadConfigurationFile()
     }
-    else if (fs.existsSync(CONFIG_PATH)) { // else we want to know if the user is using a non compatible config version | to do, check if bloat
+    else {
         let userConfig = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-        if (config.version != userConfig.version) { // and replace it if so
+        if (config.version != userConfig.version) {
             createConfigurationFile()
             loadConfigurationFile()
+            setTimeout(() => { console.log('[Socialize] Created and loaded new configuration file.!'); console.log(config) }, 10050)
             if (debug) console.log('[Socialize] Version Mismatch, creating and loading new one...')
         }
-        else { // else we just normally load it
+        else {
             loadConfigurationFile()
-            if (debug) console.log('Socialize Elsing...')
+            if (debug) console.log('[Socialize] Else, loading...')
         }
     }
 
@@ -74,7 +75,8 @@ module.exports = function Socialize(dispatch) {
         }
     }
 
-    if (!fs.existsSync(commitPath)) { // same as above more or less
+    // manage commit display
+    if (!fs.existsSync(commitPath)) {
         createCommitFile()
         setTimeout(printCommit, 10000)
     }
@@ -117,7 +119,8 @@ module.exports = function Socialize(dispatch) {
     })*/
 
     dispatch.hook('S_SOCIAL', 1, { order: 10 }, event => {
-        if (config.emoteEmulation && !emoMessaging && event.target.equals(cid)) return false
+        if (config.emoteEmulation && !emoMessaging && isMe(event.target)) return false
+        if (emoMessaging) emoMessaging = false
     })
 
     dispatch.hook('C_SOCIAL', 1, { order: 10 }, event => {
@@ -184,9 +187,12 @@ module.exports = function Socialize(dispatch) {
         })
     }
 
+    function isMe(gameId) {
+        return cid.equals(gameId)
+    }
+
     // Commands things code
     command.add('emoconfig', (wut, secondary) => {
-        if (secondary == undefined) return command.message('[Socialize] Missing secondary argument!')
         let wutStr = wut.toString()
         if (wutStr == 'info') {
             console.log('[Socialize] Current Configuration file'); console.log(config)
@@ -195,6 +201,10 @@ module.exports = function Socialize(dispatch) {
         if (wutStr == 'ping') {
             config.emulatePing = secondary
             command.message('[Socialize] Ping set to ' + secondary + '.')
+        }
+        if (wutStr == 'clientside') {
+            config.clientSidedMode = !config.clientSidedMode
+            command.message('[Socialize] Clientsided mode ' + ((config.clientSidedMode) ? 'enabled.' : 'disabled.'))
         }
         if (wutStr == 'emulate') {
             config.emoteEmulation = !config.emoteEmulation
@@ -208,9 +218,8 @@ module.exports = function Socialize(dispatch) {
             loadConfigurationFile()
             command.message('[Socialize] Configuration file loaded!')
         }
-        else command.message('[Socialize] Invalid command!')
     })
-    
+
     command.add('emocommit', () => {
         printCommit()
         command.message('[Socialize] ' + commit)
@@ -218,7 +227,12 @@ module.exports = function Socialize(dispatch) {
 
     command.add('emo', (emote, type) => {
         emoteToUse = emote
-        cAnime()
+        if (type != undefined) {
+            if (type == 'c') return sAnime()
+            if (type == 's') return cAnime()
+            else command.message('[Socialize] Invalid argument!')
+        }
+        else (config.clientSidedMode) ? sAnime() : cAnime()
     })
 
     command.add('emomsg', (emote, message, delay) => {
@@ -226,15 +240,14 @@ module.exports = function Socialize(dispatch) {
         emoteToUse = emote
         emoMessage = message
         emoMessaging = true
-        setTimeout(() => { emoMessaging = false }, 1470) //
     })
 
     /*command.add('!setitem', () => {
-
+    
     })
-
+    
     command.add('!spam', () => {
-
+    
     })*/
 
     /*command.add('ebin', (emote) => {
@@ -245,10 +258,10 @@ module.exports = function Socialize(dispatch) {
 
     // Boring
     dispatch.hook('S_MOUNT_VEHICLE', 1, event => {
-        if (event.target.equals(cid)) mounted = true
+        if (isMe(event.target)) mounted = true
     })
     dispatch.hook('S_UNMOUNT_VEHICLE', 1, event => {
-        if (event.target.equals(cid)) mounted = false
+        if (isMe(event.target)) mounted = false
     })
 } // Thx to Saltymemes and Caali for letting me read their code and even steal some bits (?), also :b:inkie
 // /! craftw, fund, etc.
