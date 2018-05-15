@@ -5,12 +5,11 @@ module.exports = function Socialize(dispatch) {
 
     const command = Command(dispatch),
         CONFIG_PATH = __dirname + '\\config.json',
-        commitPath = __dirname + '\\last commit.txt',
         debug = false // to do, delet
     //groundLoc = { x: null, y: null, z: null, w: null },
     //avEmotes = [49, 50, 51, 52] // need to dispatch emotes based on race
 
-    let cid,
+    let gameId,
         emoMessaging = false,
         mounted = false,
         currentEmote = null,
@@ -18,12 +17,9 @@ module.exports = function Socialize(dispatch) {
         itemEmote = null,
         canEmote = true, // Avoids a small client bug and meaningless spam to the server
         emoteToUse = null,
-        chlu = 0,
-        whisperTarget,
         emoMessage,
         //spamming = false
 
-        commit = 'Fixed dumb mistake in the config commands handler thingy, added clientsided mode and slightly changed the command emo, please check the readme!' + ' #2',
         // Default config, edits go in config.json!
         config = {
             version: 1.1,                // Mismatches will overwrite the file for simplicity.
@@ -75,42 +71,15 @@ module.exports = function Socialize(dispatch) {
         }
     }
 
-    // manage commit display
-    if (!fs.existsSync(commitPath)) {
-        createCommitFile()
-        setTimeout(printCommit, 10000)
-    }
-    else if (commit != (fs.readFileSync(commitPath, 'utf8')).toString()) {
-        createCommitFile()
-        setTimeout(printCommit, 10000)
-        //let localCommit = fs.readFileSync(commitPath, 'utf8')
-    }
-
-    function createCommitFile() {
-        fs.writeFileSync(commitPath, commit)
-    }
-
-    function printCommit() {
-        console.log('[Socialize] ' + commit)
-    }
-
-
     // do things code
-    dispatch.hook('S_LOGIN', 9, event => {
-        cid = event.gameId
+    dispatch.hook('S_LOGIN', 10, event => {
+        gameId = event.gameId
         /*dispatch.toClient('S_AVAILABLE_SOCIAL_LIST', 1, {
             emotes: [{ id: avEmotes }]
         })*/
     })
 
-    dispatch.hook('C_PLAYER_LOCATION', 2, event => {
-        if (config.emoteEmulation) canEmote = (event.type == 7)
-        //groundLoc.x = event.x
-        //groundLoc.y = event.y
-        //groundLoc.z = event.z
-        //groundLoc.w = event.w
-        //groundMovType = event.type
-    })
+    dispatch.hook('C_PLAYER_LOCATION', 4, event => { if (config.emoteEmulation) canEmote = (event.type == 7) })
     /*dispatch.hook('S_AVAILABLE_SOCIAL_LIST', 1, event => {
         if (log) {
             console.log('S_AVAILABLE_SOCIAL_LIST')
@@ -135,17 +104,15 @@ module.exports = function Socialize(dispatch) {
 
     dispatch.hook('C_CHAT', 1, { filter: { silenced: true } }, event => {
         if (event.message.includes(emoMessage)) {
-            chlu = event.channel
             cAnime()
-            setTimeout(toServerMessage, config.messageDelay)
+            setTimeout(toServerMessage(event.channel), config.messageDelay)
         }
     })
 
     dispatch.hook('C_WHISPER', 1, { filter: { silenced: true } }, event => {
         if (event.message.includes(emoMessage)) {
-            whisperTarget = event.target
             cAnime()
-            setTimeout(toServerWhisper, config.messageDelay)
+            setTimeout(toServerWhisper(event.target), config.messageDelay)
         }
     })
 
@@ -165,64 +132,62 @@ module.exports = function Socialize(dispatch) {
 
     function sAnime() {
         dispatch.toClient('S_SOCIAL', 1, {
-            target: cid,
+            target: gameId,
             animation: emoteToUse,
             unk1: 0,
             unk2: 0
         })
     }
 
-    function toServerMessage() {
+    function toServerMessage(Ch) {
         dispatch.toServer('C_CHAT', 1, {
-            channel: chlu,
+            channel: Ch,
             message: emoMessage
 
         })
     }
 
-    function toServerWhisper() {
+    function toServerWhisper(Target) {
         dispatch.toServer('C_WHISPER', 1, {
-            target: whisperTarget,
+            target: Target,
             message: emoMessage
         })
     }
 
-    function isMe(gameId) {
-        return cid.equals(gameId)
-    }
+    function isMe(GameId) { return gameId.equals(GameId) }
 
     // Commands things code
-    command.add('emoconfig', (wut, secondary) => {
-        let wutStr = wut.toString()
-        if (wutStr == 'info') {
-            console.log('[Socialize] Current Configuration file'); console.log(config)
-            command.message('[Socialize] Printed Configuration file to console!')
+    command.add('emoconfig', (Case1, Case2) => {
+        Case1 = Case1.toLowerCase()
+        switch (Case1) {
+            case 'info':
+                console.log('[Socialize] Current Configuration file'); console.log(config)
+                command.message('[Socialize] Printed Current Configuration file to console!')
+                break
+            case 'ping':
+                if (Case2 == undefined) break
+                config.emulatePing = Case2
+                command.message('[Socialize] Ping set to ' + Case2 + '.')
+                break
+            case 'clientside':
+                config.clientSidedMode = !config.clientSidedMode
+                command.message('[Socialize] Clientsided mode ' + ((config.clientSidedMode) ? 'enabled.' : 'disabled.'))
+                break
+            case 'emulate':
+                config.emoteEmulation = !config.emoteEmulation
+                command.message('[Socialize] Emote emulation ' + ((config.emoteEmulation) ? 'enabled.' : 'disabled.'))
+                break
+            case 'save':
+                createConfigurationFile()
+                command.message('[Socialize] Configuration file saved!')
+                break
+            case 'load':
+                loadConfigurationFile()
+                command.message('[Socialize] Configuration file loaded!')
+                break
+            case undefined:
+            default: command.message('[Socialize] Invalid command input.')
         }
-        if (wutStr == 'ping') {
-            config.emulatePing = secondary
-            command.message('[Socialize] Ping set to ' + secondary + '.')
-        }
-        if (wutStr == 'clientside') {
-            config.clientSidedMode = !config.clientSidedMode
-            command.message('[Socialize] Clientsided mode ' + ((config.clientSidedMode) ? 'enabled.' : 'disabled.'))
-        }
-        if (wutStr == 'emulate') {
-            config.emoteEmulation = !config.emoteEmulation
-            command.message('[Socialize] Emote emulation ' + ((config.emoteEmulation) ? 'enabled.' : 'disabled.'))
-        }
-        if (wutStr == 'save') {
-            createConfigurationFile()
-            command.message('[Socialize] Configuration file saved!')
-        }
-        if (wutStr == 'load') {
-            loadConfigurationFile()
-            command.message('[Socialize] Configuration file loaded!')
-        }
-    })
-
-    command.add('emocommit', () => {
-        printCommit()
-        command.message('[Socialize] ' + commit)
     })
 
     command.add('emo', (emote, type) => {
@@ -230,7 +195,7 @@ module.exports = function Socialize(dispatch) {
         if (type != undefined) {
             if (type == 'c') return sAnime()
             if (type == 's') return cAnime()
-            else command.message('[Socialize] Invalid argument!')
+            else if (type != 'c' && type != 's') command.message('[Socialize] Invalid argument!')
         }
         else (config.clientSidedMode) ? sAnime() : cAnime()
     })
@@ -242,12 +207,13 @@ module.exports = function Socialize(dispatch) {
         emoMessaging = true
     })
 
+    // blend emote x y
     /*command.add('!setitem', () => {
-    
+     
     })
-    
+     
     command.add('!spam', () => {
-    
+     
     })*/
 
     /*command.add('ebin', (emote) => {
@@ -257,11 +223,7 @@ module.exports = function Socialize(dispatch) {
     })*/
 
     // Boring
-    dispatch.hook('S_MOUNT_VEHICLE', 1, event => {
-        if (isMe(event.target)) mounted = true
-    })
-    dispatch.hook('S_UNMOUNT_VEHICLE', 1, event => {
-        if (isMe(event.target)) mounted = false
-    })
+    dispatch.hook('S_MOUNT_VEHICLE', 1, event => { if (isMe(event.target)) mounted = true })
+    dispatch.hook('S_UNMOUNT_VEHICLE', 1, event => { if (isMe(event.target)) mounted = false })
 } // Thx to Saltymemes and Caali for letting me read their code and even steal some bits (?), also :b:inkie
 // /! craftw, fund, etc.

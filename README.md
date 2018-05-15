@@ -1,8 +1,4 @@
-#### Autoupdater
-
-The module is compatible with Caali's proxy so enjoy autoupdates as well as it being built to send notices on updates and the ability to check last commit version in game.
-
-Each time you get a new update the last commit will be displayed in the console when loading the module, if you miss it though or just casually want to check in game, you can access the command *`emocommit`*.
+-main info-
 
 #### Commands
 
@@ -23,4 +19,15 @@ Each time you get a new update the last commit will be displayed in the console 
 
 ***Note:*** *the config will be generated once the script loads and it will be overwritten if needed when updating the script for simplicity.*
 
-~~The code is messy and the readme ugly but i just wanted to release it for now since i delayed it for so long already.~~
+#### To do:
+
+- [] Add more random stuff.
+- [] Actually give the module a purpose to exist.
+- [] Add a toggle for clientsided emoting protection or parse times.
+- [] Yell more at Dong.
+
+#### Credits
+
+* **Saegusa:** for inspiring me to do this section and reference credits section.
+* **Caali:** for the autoupdater and two random defs.
+* **SaltyMonkey:** for random help.

@@ -1,17 +1,18 @@
 {
-  "files": {
-    "Emotes.txt": "8e9dfd1495e15892d854dec33ad238229b600b677f9e9c342e752f9d5318efaa",
-    "Index.js": "7f57a8d9eeef8827423304be7f591e9832499b733c7516b578d7c89a64a83529",
-    "README.md": "60be20c2ec832b115fdc2852b703467269231a8e1aebbd7628452fdf5fbb7633"
-  },
-  "defs": {
-    "S_LOGIN": 9,
-    "C_PLAYER_LOCATION": 2,
-    "S_SOCIAL": 1,
-    "C_SOCIAL": 1,
-    "C_CHAT": 1,
-    "C_WHISPER": 1,
-    "S_MOUNT_VEHICLE": 1,
-    "S_UNMOUNT_VEHICLE": 1
-  }
+	"files": {
+		"Emotes.txt": "8e9dfd1495e15892d854dec33ad238229b600b677f9e9c342e752f9d5318efaa",
+		"Index.js": "ec80b53d8608042e8873979b280aef36c3537e2f0c548bb14a7af0175c633607",
+		"README.md": "b360051ae1731864cb308216cc0d96978e4a65e6d4ee9a8b7a8590123c6fe479",
+		"Changelog.txt": "3074d4002dcb5c1a4534d4cb34c1738a43d144d685d45a712844114099c22d43"
+	},
+	"defs": {
+		"S_LOGIN": 10,
+		"C_PLAYER_LOCATION": 4,
+		"S_SOCIAL": 1,
+		"C_SOCIAL": 1,
+		"C_CHAT": 1,
+		"C_WHISPER": 1,
+		"S_MOUNT_VEHICLE": 1,
+		"S_UNMOUNT_VEHICLE": 1
+	}
 }

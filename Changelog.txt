@@ -1,0 +1,7 @@
+~V 1.1a~
+
+* Updated defs. 
+* Slight bug fixes. 
+* Refactored code a bit. Updated readme. 
+* Removed emo commit function since a changelong makes 100 times more sense.
+* Broke something that i might fix later.
