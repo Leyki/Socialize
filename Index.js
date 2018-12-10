@@ -79,7 +79,7 @@ module.exports = function Socialize(dispatch) {
         })*/
     })
 
-    dispatch.hook('C_PLAYER_LOCATION', 4, event => { if (config.emoteEmulation) canEmote = (event.type == 7) })
+    dispatch.hook('C_PLAYER_LOCATION', 5, event => { if (config.emoteEmulation) canEmote = (event.type == 7) })
     /*dispatch.hook('S_AVAILABLE_SOCIAL_LIST', 1, event => {
         if (log) {
             console.log('S_AVAILABLE_SOCIAL_LIST')
@@ -223,7 +223,7 @@ module.exports = function Socialize(dispatch) {
     })*/
 
     // Boring
-    dispatch.hook('S_MOUNT_VEHICLE', 1, event => { if (isMe(event.target)) mounted = true })
-    dispatch.hook('S_UNMOUNT_VEHICLE', 1, event => { if (isMe(event.target)) mounted = false })
+    dispatch.hook('S_MOUNT_VEHICLE', 2, event => { if (isMe(event.gameId)) mounted = true })
+    dispatch.hook('S_UNMOUNT_VEHICLE', 2, event => { if (isMe(event.gameId)) mounted = false })
 } // Thx to Saltymemes and Caali for letting me read their code and even steal some bits (?), also :b:inkie
 // /! craftw, fund, etc.

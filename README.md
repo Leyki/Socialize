@@ -1,10 +1,12 @@
--main info-
+#### What it do
+
+The main purpose on this module is on unlocking emotes that would else not be usable in same manner or not at all, and grant any thinkeablea feature possible to add(soon:tm:).
 
 #### Commands
 
 * ***`emo`*** *`emote id`* + *`type(optional)`* will dispatch ***any*** normally usable emote to the server, ids can be found on `Emotes.txt`. **type** can either be ***c*** or ***s*** for indicating clientsided and serversided respectively.
 ######
-* ***`emosmg`*** *`emote id` + `"message"` + `delay(optional)`* will do the same as *`emo`* but also send a **message** with a **delay** of your choice, message should be expressed as showed, such as ***"example 1"*** or ***\`example 2\`*** due to shitty coding. The message will be sent through the channel in which the command was accesed so use it accordingly.
+* ***`emosmg`*** *`emote id` + `"message"` + `delay(optional)`* will do the same as *`emo`* but also send a **message** with a **delay** of your choice, message should be expressed as showed, such as ***"example 1"*** or ***\`example 2\`*** due to shitty coding. The message will be sent through the channel in which the command was accessed from so use it accordingly.
 
 ***Note:*** *`delay` will default to the last used value if empty.*
 ######
@@ -16,8 +18,6 @@
   - *`emulate`* will turn on and off the emote emulation.
   - *`save`* will save the current configuration file for future usage.
   - *`load`* will load edits directly from the .json file, if you prefer to edit configs that way.
-
-***Note:*** *the config will be generated once the script loads and it will be overwritten if needed when updating the script for simplicity.*
 
 #### To do:
 
