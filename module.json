@@ -1,4 +1,8 @@
 {
-    "servers": ["https://raw.githubusercontent.com/Leyki/Socialize/master/"],
-    "supportUrl": "https://discord.gg/maqBmJV"
+    "disableAutoUpdate": false,
+    "servers": [ "https://raw.githubusercontent.com/Leyki/Socialize/master/" ],
+    "supportUrl": "https://discord.gg/maqBmJV",
+    "options": {
+        "niceName": "Socialize"
+    }
 }
