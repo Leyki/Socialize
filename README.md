@@ -11,20 +11,16 @@ The main purpose on this module is on unlocking emotes that would else not be us
 ***Note:*** *`delay` will default to the last used value if empty.*
 ######
 
-* ***`emoconfig`*** *`[Arguments]`*
-  - *`info`* will print the current configuration file to the console.
-  - *`clientside`* will turn on and off the clientsided mode.
-  - *`ping` + `value`* will change the ping emulation to the desired value with 0 disabling it.
-  - *`emulate`* will turn on and off the emote emulation.
-  - *`save`* will save the current configuration file for future usage.
-  - *`load`* will load edits directly from the .json file, if you prefer to edit configs that way.
+* ***`emosets`*** *`[Arguments]`* *If no arguments are found it will display the current settings.*
+  - *`clientsided` + `[On/Off]`* will turn on and off the clientsided mode. *This also disables incoming iddle emotes from the server!.*
+  - *`nomessage` + `[On/Off]`* will turn on and off the no emote message mode. *Do remember that this a serversided setting.*
+  - *`emulation` + `[On/Off/Number]`* Bools emote prediction, emulating the given delay if a number.
+
+Settings will be automatically saved when exitting the game.
 
 #### To do:
 
-- [] Add more random stuff.
-- [] Actually give the module a purpose to exist.
-- [] Add a toggle for clientsided emoting protection or parse times.
-- [] Yell more at Dong.
+- [] Idk.
 
 #### Credits
 

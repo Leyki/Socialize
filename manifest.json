@@ -1,9 +1,10 @@
 {
 	"files": {
 		"Emotes.txt": "6432d3d3dd5d4041b4d4b0e8d1cb9b7741f31e415372d40a651b953b6274a85d",
-		"Index.js": "199c611aa790f8879593cd1fd6147ed3723201626738eb1c189d29fdc396e7ea",
-		"README.md": "d6f15ff0f0f93d16d6b3c60856f3763d416677598c6e3c1ba7aef00acdc49de6",
-		"module.json": "42be05b0590fc6ccdae370ee72c39527360289e519b1ae742537232472bffdba"
+		"Index.js": "77de1a42cf25e5108ca0e0db25742242098419afef1930b0f65001cb817e7de3",
+		"README.md": "8b0ab651a022085065d0f124e899095c64c4024921a98617b9eac03c1c459aac",
+		"module.json": "8ccbffb328b96af8ecbcd81487cda70d9d4f58678715944c8a26dfb6f2191bc7",
+		"lib/settings_migrator.js": "5e55b6b87b6bb6853edd17f1cb2e9f24d05fc4795d8f395f6ee32c13abeacc1f"
 	},
 	"defs": {
 		"C_PLAYER_LOCATION": 5,

@@ -1,0 +1,8 @@
+{
+    "version": 1,
+    "data": {
+        "clientsided_mode": true,
+        "no_emote_message_mode": false,
+        "emote_emulation": false
+    }
+}

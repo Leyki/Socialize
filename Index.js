@@ -2,192 +2,147 @@ const fs = require('fs') // By Zelekie
 
 module.exports = function Socialize(mod) {
 
-	const CONFIG_PATH = __dirname + '\\config.json'
-
 	const user = {
 		canEmote: true, // Avoids a small client bug and meaningless spam to the server
+		currentEmote: 0,
 		isEmoting: false,
-		isEmoMessaging: false,
+		emotePromise: 0,
+		emoteMessagePromise: null,
+		emoteMessageDelay: 0
 		// isMounted / mod.game.me.mounted
 	}
 
-	let currentEmote = null,
-		itemEmote = null,
-		emoteToUse = null,
-		emoMessage,
-		//spamming = false
-
-		// Default config, edits go in config.json!
-		config = {
-			version: 1.1,                // Mismatches will overwrite the file for simplicity.
-			clientSidedMode: false, // enables and disables clientsided mode
-			//blindMode = { console: false, cmdMessages: false }, // Disables any ingame command message and/or console logs.
-			emoteEmulation: false, // Simulates emotes, be ware that your client won't be synched with others.
-			emulatePing: 0,     // If for whatever reason you want this, 0 will disable it. It's a bit interesting how ping affects sit/stand up, idk how it looks server side
-			messageDelay: 300 // Same as above
-			//randomizeIntervalTimers = true // This is to make spam more "human" like or something i guess.
-			//assistCostumeSwitchingGlitch // To do, mod.command + getcostume, etc.
-			//autoTeaBagOnDeadBodies      // Yes.
-			//autoTeaBagAddedNames = ["Juanito", "Fippito", "Marcelito"]
-			//mountProtection: true, // Disables emote usage when mounted(Aside from the ones that don't dismount).
-			//addFundEmoteToChat = { enabled: true, msgTrigger: 'fund me plox', itemTrigger: 6560 }, // Minor Replenishment Potable
-			//stopTheEmotion = { me: null, others: null, npcs: null }, //
-		} // Anything commented is just ideas, doesn't mean i'd do them :>... or have the brain to do them > .<
-
-	// manage config files
-	if (!fs.existsSync(CONFIG_PATH)) {
-		createConfigurationFile()
-		loadConfigurationFile()
-	}
-	else {
-		let userConfig = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
-		if (config.version != userConfig.version) {
-			createConfigurationFile()
-			loadConfigurationFile()
-			setTimeout(() => { console.log('Created and loaded new configuration file.!'); console.log(config) }, 10050)
-		}
-		else loadConfigurationFile()
-	}
-
-	function createConfigurationFile() { // thx thx salty
-		fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, '\t'))
-	}
-
-	function loadConfigurationFile() {
-		try { config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')) }
-		catch (err) { throw Error(`${err}`) }
-	}
-
-	mod.hook('C_PLAYER_LOCATION', 5, event => { if (config.emoteEmulation) user.canEmote = (event.type == 7) })
+	mod.hook('C_PLAYER_LOCATION', 5, event => { user.canEmote = (event.type === 7) })
 
 	mod.hook('S_SOCIAL', 1, { order: 10 }, event => {
-		if (config.emoteEmulation && !user.isEmoMessaging && mod.game.me.is(event.target)) return false
-		if (user.isEmoMessaging) user.isEmoMessaging = false
+		if (!mod.game.me.is(event.target)) return
+		if (mod.settings.clientsided_mode || mod.settings.emote_emulation) return false
 	})
 
 	mod.hook('C_SOCIAL', 1, { order: 10 }, event => {
-		if (user.canEmote == false) return false
-		if (config.emoteEmulation) {
-			emoteToUse = event.emote, cAnime()
-			return false
-		}
+		cAnime(event.emote, event.unk)
+		return false
 	})
 
+	// The idk how to else do it to check incoming channel in msgs thing
 	mod.hook('C_CHAT', 1, { filter: { silenced: true } }, event => {
-		if (event.message.includes(emoMessage)) {
-			cAnime()
-			setTimeout(toServerMessage(event.channel), config.messageDelay)
+		if (event.message.includes(user.emoteMessagePromise)) {
+			cAnime(user.emotePromise)
+			setTimeout(() => { toServerMessage(event.channel) }, user.emoteMessageDelay);
 		}
 	})
-
+	// same thing but in whispers
 	mod.hook('C_WHISPER', 1, { filter: { silenced: true } }, event => {
-		if (event.message.includes(emoMessage)) {
-			cAnime()
-			setTimeout(toServerWhisper(event.target), config.messageDelay)
+		if (event.message.includes(user.emoteMessagePromise)) {
+			cAnime(user.emotePromise)
+			setTimeout(() => { toServerWhisper(event.target) }, user.emoteMessageDelay);
 		}
 	})
 
 	// do functional things code
-	function cAnime() {
-		if (user.canEmote) {
-			mod.send('C_SOCIAL', 1, {
-				emote: emoteToUse,
-				unk: 0
-			})
-			if (!user.isEmoMessaging) {
-				if (config.emoteEmulation && config.emulatePing == 0) sAnime()
-				else if (config.emulatePing != 0) setTimeout(sAnime, config.emulatePing)
-			}
-		}
+	function cAnime(SocialId, noPredefinedMessage) {
+		if (!user.canEmote) return // but can we
+		// ok we can
+		if (mod.settings.clientsided_mode) return sAnime(SocialId) // i wanna be sneaky!
+		mod.send('C_SOCIAL', 1, { emote: SocialId, unk: noPredefinedMessage || mod.settings.no_emote_message_mode })
+		// but can we be speedy or slowy
+		if (mod.settings.emote_emulation === true) return sAnime(SocialId)
+		if (mod.settings.emote_emulation) // no check for other stuff or in command because we trust the user! c: for now...i hope
+			setTimeout(() => { sAnime(SocialId) }, mod.settings.emote_emulation)
 	}
 
-	function sAnime() {
+	function sAnime(SocialId, forceAnimation) {
 		mod.send('S_SOCIAL', 1, {
 			target: mod.game.me.gameId,
-			animation: emoteToUse,
+			animation: SocialId,
 			unk1: 0,
-			unk2: 0
+			unk2: forceAnimation || 0
 		})
 	}
 
 	function toServerMessage(Ch) {
 		mod.send('C_CHAT', 1, {
 			channel: Ch,
-			message: emoMessage
-
+			message: user.emoteMessagePromise
 		})
+		user.emoteMessagePromise = null
 	}
 
 	function toServerWhisper(Target) {
 		mod.send('C_WHISPER', 1, {
 			target: Target,
-			message: emoMessage
+			message: user.emoteMessagePromise
 		})
+		user.emoteMessagePromise = null
 	}
 
-	// Commands things code
-	mod.command.add('emoconfig', (Case1, Case2) =>{
-		Case1 = Case1.toLowerCase()
-		switch (Case1) {
-			case 'info':
-				console.log('Current Configuration file'); console.log(config)
-				mod.command.message('Printed Current Configuration file to console!')
-				break
-			case 'ping':
-				if (Case2 == undefined) break
-				config.emulatePing = Case2
-				mod.command.message('Ping set to ' + Case2 + '.')
-				break
-			case 'clientside':
-				config.clientSidedMode = !config.clientSidedMode
-				mod.command.message('Clientsided mode ' + ((config.clientSidedMode) ? 'enabled.' : 'disabled.'))
-				break
-			case 'emulate':
-				config.emoteEmulation = !config.emoteEmulation
-				mod.command.message('Emote emulation ' + ((config.emoteEmulation) ? 'enabled.' : 'disabled.'))
-				break
-			case 'save':
-				createConfigurationFile()
-				mod.command.message('Configuration file saved!')
-				break
-			case 'load':
-				loadConfigurationFile()
-				mod.command.message('Configuration file loaded!')
-				break
-			case undefined:
-			default: mod.command.message('Invalid mod.command input.')
+	mod.command.add('emosets', {
+		emulation: {
+			on() {
+				mod.settings.emote_emulation = true
+				mod.command.message('Emote emulation enabled.')
+			},
+			off() {
+				mod.settings.emote_emulation = false
+				mod.command.message('Emote emulation disabled.')
+			},
+			$default(PingValue) {
+				const val = +PingValue
+				if (!val) return mod.command.message('Innapropiate or missing ping value.')
+				mod.command.message(`Emote emulation set to ${val}ms.`)
+				mod.settings.emote_emulation = val
+			},
+			$none() { mod.command.message(`Something went wrong!, i don't know what but chances are that your misstyped something!`) }
+		},
+		clientsided: {
+			on() {
+				mod.settings.clientsided_mode = true
+				mod.command.message('Only clientsided mode enabled.')
+			},
+			off() {
+				mod.settings.clientsided_mode = false
+				mod.command.message('Only clientsided mode disabled.')
+			},
+			$default() { mod.command.message(`Something went wrong!, i don't know what but chances are that your misstyped something!`) },
+		},
+		nomessage: {
+			on() {
+				mod.settings.no_emote_message_mode = true
+				mod.command.message('Only no emote message mode enabled.')
+			},
+			off() {
+				mod.settings.no_emote_message_mode = false
+				mod.command.message('Only no emote message mode disabled.')
+			},
+			$default() { mod.command.message(`Something went wrong!, i don't know what but chances are that your misstyped something!`) },
+		},
+		$default() { mod.command.message(`Something went wrong!, i don't know what but chances are that your misstyped something!`) },
+		$none() {
+			mod.command.message('Current settings')
+			mod.command.message(`Clientsided mode: ${mod.settings.clientsided_mode}.`)
+			mod.command.message(`No emote message mode: ${mod.settings.no_emote_message_mode}.`)
+			mod.command.message(`Emote emulation: ${mod.settings.emote_emulation}.`)
 		}
 	})
 
-	mod.command.add('emo', (emote, type) => {
-		emoteToUse = emote
-		if (type != undefined) {
-			if (type == 'c') return sAnime()
-			if (type == 's') return cAnime()
-			else if (type != 'c' && type != 's') mod.command.message('Invalid argument!')
-		}
-		else (config.clientSidedMode) ? sAnime() : cAnime()
-	})
+	mod.command.add('emo', {
+		$default(id, type) {
+			const socialId = +id
+			if (socialId === NaN) return mod.command.message('Invalid emote id input. Use numbers.')
+			if (socialId < 11 || socialId > 89) return mod.command.message('Invalid emote id range!')
 
-	mod.command.add('emomsg', (emote, message, delay) => {
-		if (delay != undefined) config.messageDelay = delay
-		emoteToUse = emote
-		emoMessage = message
-		user.isEmoMessaging = true
-	})
+			if (!type) return mod.settings.clientsided_mode ? sAnime(socialId) : cAnime(socialId) // Lower are common npc ids, higher doesn't exist.
 
-	// blend emote x y
-	/*mod.command.add('!setitem', () => {
-	 
+			if (type == 'c') return sAnime(socialId)
+			if (type == 's') return cAnime(socialId)
+			else mod.command.message(`Wrong arguments, try again!`)
+		},
+		$none() { mod.command.message(`Usage: emo 'emoteId' 'type'(optional)`) },
 	})
-	 
-	mod.command.add('!spam', () => {
-	 
-	})*/
-
-	/*mod.command.add('ebin', (emote) => {
-			mod.send('S_AVAILABLE_SOCIAL_LIST', 1, {
-					emotes: [{ id: emote }]
-			})
-	})*/
+	// kms
+	mod.command.add('emomsg', (id, message, delay) => {
+		user.emoteMessagePromise = message
+		user.emotePromise = id
+		if (delay) user.emoteMessageDelay = delay
+	})
 }
