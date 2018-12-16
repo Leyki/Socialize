@@ -4,9 +4,11 @@
     "name": "Socialize",
     "author": "Leyki",
     "version": 1.1,
-    "donationUrl": "Send gold to Leyki in VK(NA) c:",
+    "donationUrl": "https://Leyki_VK_NA",
     "description": "A general usage emote script and some more stuff.",
-    "servers": [ "https://raw.githubusercontent.com/Leyki/Socialize/master/" ],
+    "servers": [
+        "https://raw.githubusercontent.com/Leyki/Socialize/master/"
+    ],
     "supportUrl": "https://discord.gg/maqBmJV",
     "options": {
         "niceName": "Socialize",
