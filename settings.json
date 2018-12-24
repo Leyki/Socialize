@@ -1,7 +1,7 @@
 {
     "version": 1,
     "data": {
-        "clientsided_mode": true,
+        "clientsided_mode": false,
         "no_emote_message_mode": false,
         "emote_emulation": false
     }
