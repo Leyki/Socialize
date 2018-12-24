@@ -6,10 +6,7 @@
     "version": 1.1,
     "donationUrl": "https://Leyki_VK_NA",
     "description": "A general usage emote script and some more stuff.",
-    "servers": [
-        "https://raw.githubusercontent.com/Leyki/Socialize/master/"
-    ],
-    "supportUrl": "https://discord.gg/maqBmJV",
+    "servers": [ "https://raw.githubusercontent.com/Leyki/Socialize/master/"],
     "options": {
         "niceName": "Socialize",
         "settingsVersion": 1,
