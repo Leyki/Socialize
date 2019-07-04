@@ -129,7 +129,6 @@ module.exports = function Socialize(mod) {
 		$default(id, type) {
 			const socialId = +id
 			if (socialId === NaN) return mod.command.message('Invalid emote id input. Use numbers.')
-			if (socialId < 11 || socialId > 89) return mod.command.message('Invalid emote id range!')
 
 			if (!type) return mod.settings.clientsided_mode ? sAnime(socialId) : cAnime(socialId) // Lower are common npc ids, higher doesn't exist.
 
